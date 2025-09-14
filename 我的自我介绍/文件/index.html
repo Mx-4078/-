@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的自我介绍</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- 引入手绘风格字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#3B82F6', // 调整为更鲜明的蓝色
+        secondary: '#10B981', // 调整为更舒适的绿色
+        accent: '#F59E0B',   // 调整为温暖的橙色
+        dark: '#1F2937',
+        douyin: '#FE2C55', // 抖音红色
+      },
+      fontFamily: {
+        hand: ['Architects Daughter', 'cursive'],
+        brush: ['Zhi Mang Xing', 'cursive'],
+        song: ['SimSun', 'STSong', 'serif'], // 宋体字体族
+      },
+    },
+  }
+}
+</script>
+<style type="text/tailwindcss">
+  @layer utilities {
+    .sketch-border {
+      border: 2px solid #1F2937;
+      border-radius: 12px;
+      box-shadow: 6px 6px 0 #1F2937;
+      transition: all 0.3s ease;
+    }
+    .sketch-border:hover {
+      box-shadow: 8px 8px 0 #1F2937;
+    }
+    .sketch-btn {
+      transition: all 0.2s ease;
+    }
+    .sketch-btn:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 6px 6px 0 #1F2937;
+    }
+    .sketch-btn:active {
+      transform: translate(0, 0);
+      box-shadow: 3px 3px 0 #1F2937;
+    }
+    .rotate-hover {
+      transition: transform 0.3s ease;
+    }
+    .rotate-hover:hover {
+      transform: rotate(-2deg) scale(1.02);
+    }
+    .gallery-img {
+      transition: all 0.3s ease;
+    }
+    .gallery-img:hover {
+      transform: scale(1.05);
+    }
+    .douyin-icon {
+      filter: drop-shadow(2px 2px 1px rgba(0,0,0,0.3));
+    }
+    .trophy-icon {
+      filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));
+      animation: shine 2s infinite alternate;
+    }
+    @keyframes shine {
+      from { filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2)); }
+      to { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.8)); }
+    }
+    .section-fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .section-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+<style>
+  body {
+    background: linear-gradient(120deg, #EFF6FF, #DBEAFE);
+    overflow-x: hidden;
+    background-attachment: fixed;
+  }
+  #interactive-cursor {
+    position: fixed;
+    width: 24px; 
+    height: 24px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 50%;
+    background-color: #1F2937;
+    mix-blend-mode: difference;
+  }
+  /* 基础光标样式 */
+  #interactive-cursor::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* 不同区域的光标样式 */
+  #interactive-cursor.skills {
+    background-color: #10B981;
+    width: 32px;
+    height: 32px;
+  }
+  
+  #interactive-cursor.honors {
+    background-color: #F59E0B;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%) rotate(15deg);
+  }
+  
+  #interactive-cursor.works {
+    background-color: #FE2C55;
+    width: 36px;
+    height: 36px;
+    border-radius: 20% 80% 30% 70% / 70% 30% 80% 20%;
+  }
+  
+  #interactive-cursor.profile {
+    background-color: #3B82F6;
+    width: 28px;
+    height: 28px;
+  }
+  
+  /* 点击效果 */
+  #interactive-cursor.click {
+    transform: translate(-50%, -50%) scale(0.8);
+    box-shadow: 0 0 15px currentColor;
+  }
+  
+  /* 呼吸效果 */
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+  }
+  
+  #interactive-cursor.pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  .paper-texture {
+    background-image: url('https://picsum.photos/id/106/200/200');
+    background-blend-mode: overlay;
+    background-size: 300px;
+  }
+  .tooltip {
+    position: absolute;
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(10px);
+    z-index: 10000;
+  }
+  .tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* 荣誉卡片动画 */
+  .honor-card {
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .honor-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* 优秀学生图标动画 */
+  .excellent-student-icon {
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  /* 宋体区域样式调整 */
+  .songti-section p,
+  .songti-section h3,
+  .songti-section .sketch-btn {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .songti-section h3 {
+    font-weight: bold;
+  }
+  /* 滚动条美化 */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #EFF6FF;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #93C5FD;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #60A5FA;
+  }
+</style>
+</head>
+<body class="font-hand text-dark">
+  <!-- 互动反馈型光标 -->
+  <div id="interactive-cursor"></div>
+
+  <!-- 顶部标题 -->
+  <header class="py-8 px-4 md:px-10 section-fade-in">
+    <h1 class="text-4xl md:text-6xl font-brush text-center text-primary drop-shadow-lg">老师你好，我是马鑫</h1>
+    <p class="text-center text-lg md:text-xl mt-2">喜欢打羽毛球 & 热爱摄影摄像</p>
+  </header>
+
+  <!-- 头像区域 -->
+  <section class="flex justify-center my-8 cursor-profile section-fade-in">
+    <div class="sketch-border bg-white p-3 rotate-hover">
+      <img src="js/头像.jpg" alt="马鑫的头像" class="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover">
+    </div>
+  </section>
+  
+  <!-- 关于我 -->
+  <section class="max-w-2xl mx-4 md:mx-auto mb-12 cursor-profile section-fade-in">
+    <div class="sketch-border bg-white p-6 md:p-8 paper-texture">
+      <h2 class="text-2xl md:text-3xl font-brush mb-4">关于我</h2>
+      <p class="mb-4">我是一名充满热情与活力的学生，目前就读于山西铁道职业技术学院。我是一个对世界充满好奇，喜欢探索新事物，尤其对摄影和摄像有着浓厚的兴趣。</p>
+      <p class="mb-4">在学习上，我认真努力，乐于助人；在生活中，我积极乐观，善于发现生活中的美好。我相信通过不断学习和实践，能够不断提升自己，实现更大的价值。</p>
+	  <p>希望在接下来的时间里和大家相处</p>
+    </div>
+  </section>
+
+  <!-- 技能 -->
+  <section class="max-w-2xl mx-4 md:mx-auto mb-12 cursor-skills section-fade-in">
+    <div class="sketch-border bg-white p-6 md:p-8 paper-texture">
+      <h2 class="text-2xl md:text-3xl font-brush mb-6">我的技能</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="sketch-btn bg-secondary/20 p-3 rounded-lg text-center">
+          <i class="fa fa-video-camera mr-2"></i>摄像
+        </div>
+        <div class="sketch-btn bg-secondary/20 p-3 rounded-lg text-center">
+          <i class="fa fa-camera mr-2"></i>摄影
+        </div>
+        <div class="sketch-btn bg-secondary/20 p-3 rounded-lg text-center">
+          <i class="fa fa-plane mr-2"></i>飞无人机
+        </div>
+        <div class="sketch-btn bg-secondary/20 p-3 rounded-lg text-center">
+          <i class="fa fa-paint-brush mr-2"></i>PS修图
+        </div>
+        <div class="sketch-btn bg-secondary/20 p-3 rounded-lg text-center">
+          <i class="fa fa-microchip mr-2"></i>计算机组装
+        </div>
+        <div class="sketch-btn bg-secondary/20 p-3 rounded-lg text-center">
+          <i class="fa fa-wrench mr-2"></i>小物品维修
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 学习经历 - 使用宋体 -->
+  <section class="max-w-2xl mx-4 md:mx-auto mb-12 songti-section font-song cursor-profile section-fade-in">
+    <div class="sketch-border bg-white p-6 md:p-8 paper-texture">
+      <h2 class="text-2xl md:text-3xl font-brush mb-6">学习经历</h2>
+      <div class="space-y-4">
+        <div class="sketch-btn bg-accent/30 p-3 rounded-lg">
+          <h3>山西省现代经贸学校 计算机应用专业</h3>
+          <p>2022年9月 - 2025年6月</p>
+        </div>
+        <div class="sketch-btn bg-accent/30 p-3 rounded-lg">
+          <h3>灵丘县第三中学校</h3>
+          <p>2019年9月 - 2022年6月</p>
+        </div>
+        <div class="sketch-btn bg-accent/30 p-3 rounded-lg">
+          <h3>灵丘县实验小学</h3>
+          <p>2013年9月 - 2019年6月</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 荣誉展示 - 使用宋体 -->
+  <section class="max-w-2xl mx-4 md:mx-auto mb-12 songti-section font-song cursor-honors section-fade-in">
+    <div class="sketch-border bg-white p-6 md:p-8 paper-texture">
+      <h2 class="text-2xl md:text-3xl font-brush mb-6 flex items-center">
+        <i class="fa fa-trophy text-accent trophy-icon mr-3"></i>荣誉展示
+      </h2>
+      
+      <div class="space-y-6" id="honors-container">
+        <!-- 荣誉1 - 校级先进学生荣誉称号 -->
+        <div class="honor-card sketch-btn bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+          <div class="flex flex-col md:flex-row items-start md:items-center">
+            <div class="bg-accent/20 p-3 rounded-full mr-4 mb-3 md:mb-0">
+              <!-- 改为更适合先进学生称号的图标 -->
+              <i class="fa fa-user-check text-2xl text-accent excellent-student-icon"></i>
+            </div>
+            <div>
+              <h3>校级先进学生荣誉称号</h3>
+              <p class="text-gray-600">2020-2023年度获得</p>
+              <p class="mt-2">因在校内多项校园活动表现突出，帮助同学效果显著，因此被评为校级先进学生荣誉称号</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 荣誉2 -->
+        <div class="honor-card sketch-btn bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg">
+          <div class="flex flex-col md:flex-row items-start md:items-center">
+            <div class="bg-secondary/20 p-3 rounded-full mr-4 mb-3 md:mb-0">
+              <i class="fa fa-microchip text-2xl text-secondary"></i>
+            </div>
+            <div>
+              <h3>校园第六届技能大赛计算机专业-综合技能-一等奖</h3>
+              <p class="text-gray-600">2024年5月</p>
+              <p class="mt-2">设计的智能网页表单和Access数据库还有Python小游戏制作中获得大赛一等奖，兼具实用性与创新性</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 荣誉3 -->
+        <div class="honor-card sketch-btn bg-gradient-to-r from-pink-50 to-red-50 p-4 rounded-lg">
+          <div class="flex flex-col md:flex-row items-start md:items-center">
+            <div class="bg-douyin/20 p-3 rounded-full mr-4 mb-3 md:mb-0">
+              <i class="fa fa-award text-2xl text-douyin"></i>
+            </div>
+            <div>
+              <h3>校园第六届技能大赛计算机专业-计算机组装与维修-一等奖</h3>
+              <p class="text-gray-600">2024年5月</p>
+              <p class="mt-2">校内的技能大赛《计算机组装与维修》获得一等奖，体现了课上老师讲课课下实操的强大动手能力和学习能力</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 荣誉4 -->
+        <div class="honor-card sketch-btn bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg">
+          <div class="flex flex-col md:flex-row items-start md:items-center">
+            <div class="bg-primary/20 p-3 rounded-full mr-4 mb-3 md:mb-0">
+              <i class="fa fa-users text-2xl text-primary"></i>
+            </div>
+            <div>
+              <h3>校级优秀班干部荣誉称号</h3>
+              <p class="text-gray-600">2023-2024年度获得</p>
+              <p class="mt-2">因在班级内表现突出，能起到对其它同学的带头表率作用，因此被评为校级先进学生荣誉称号</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 作品展示 - 使用宋体 -->
+  <section class="max-w-2xl mx-4 md:mx-auto mb-12 songti-section font-song cursor-works section-fade-in">
+    <div class="sketch-border bg-white p-6 md:p-8 paper-texture">
+      <h2 class="text-2xl md:text-3xl font-brush mb-6 flex items-center">
+        <i class="fa fa-film text-douyin mr-3"></i>作品展示
+      </h2>
+      
+      <!-- 抖音作品容器 -->
+      <div class="relative group">
+        <div class="sketch-border p-4 bg-gradient-to-br from-red-50 to-pink-50 rotate-hover cursor-pointer" 
+             id="douyin-container"
+             data-url="https://v.douyin.com/VD4ZKeS1kDk/">
+          
+          <div class="flex flex-col items-center justify-center">
+            <!-- 抖音图标和文字 -->
+            <div class="flex items-center mb-4">
+              <i class="fa fa-music text-4xl text-douyin douyin-icon mr-3"></i>
+              <span class="text-xl font-bold text-douyin">我的抖音作品</span>
+            </div>
+            
+            <!-- 作品缩略图 -->
+            <div class="relative w-full max-w-md mx-auto rounded-lg overflow-hidden mb-4">
+              <img src="https://picsum.photos/id/26/600/400" alt="抖音作品缩略图" class="w-full h-auto">
+              <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                <div class="w-16 h-16 rounded-full bg-douyin flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                  <i class="fa fa-play text-white text-xl ml-1"></i>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 提示文字 -->
+            <p class="text-center text-gray-700 mb-2">点击跳转到抖音查看我的更多作品</p>
+            <p class="text-center text-sm text-gray-500">长按可复制链接</p>
+          </div>
+        </div>
+        
+        <!-- 工具提示 -->
+        <div class="tooltip" id="copy-tooltip">已复制链接!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="text-center py-6 text-sm section-fade-in">
+    <p>© 2025 马鑫 · 手绘风格自我介绍</p>
+  </footer>
+  <!-- 页脚 -->
+  <footer class="text-center py-6 text-sm">
+    <p>© 2025 马鑫 · 手绘风格自我介绍</p>
+  </footer>
+
+  <script>
+    // 互动反馈型光标效果
+    const cursor = document.getElementById('interactive-cursor');
+    const cursorClasses = ['skills', 'honors', 'works', 'profile'];
+    
+    // 光标跟随鼠标移动
+    document.addEventListener('mousemove', (e) => {
+      // 添加轻微延迟使光标更自然
+      requestAnimationFrame(() => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      });
+    });
+    
+    // 区域检测与光标样式切换
+    function handleCursorArea(e) {
+      // 移除所有光标样式类
+      cursorClasses.forEach(cls => cursor.classList.remove(cls));
+      
+      // 检测当前鼠标所在区域并应用对应样式
+      if (e.target.closest('.cursor-skills')) {
+        cursor.classList.add('skills');
+      } else if (e.target.closest('.cursor-honors')) {
+        cursor.classList.add('honors');
+      } else if (e.target.closest('.cursor-works')) {
+        cursor.classList.add('works');
+      } else if (e.target.closest('.cursor-profile')) {
+        cursor.classList.add('profile');
+      }
+    }
+    
+    // 监听鼠标移动检测区域
+    document.addEventListener('mousemove', handleCursorArea);
+    
+    // 点击效果
+    document.addEventListener('mousedown', () => {
+      cursor.classList.add('click');
+      // 添加脉冲效果
+      cursor.classList.add('pulse');
+    });
+    
+    document.addEventListener('mouseup', () => {
+      cursor.classList.remove('click');
+      // 移除脉冲效果
+      setTimeout(() => {
+        cursor.classList.remove('pulse');
+      }, 500);
+    });
+    
+    // 抖音作品区域功能
+    const douyinContainer = document.getElementById('douyin-container');
+    const tooltip = document.getElementById('copy-tooltip');
+    const douyinUrl = douyinContainer.getAttribute('data-url');
+    
+    // 点击跳转功能
+    douyinContainer.addEventListener('click', () => {
+      window.open(douyinUrl, '_blank');
+    });
+    
+    // 长按复制功能
+    douyinContainer.addEventListener('contextmenu', (e) => {
+      e.preventDefault(); // 阻止默认右键菜单
+      
+      // 复制链接到剪贴板
+      navigator.clipboard.writeText(douyinUrl).then(() => {
+        // 显示提示
+        const rect = douyinContainer.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + rect.width / 2}px`;
+        tooltip.style.top = `${rect.top - 30}px`;
+        tooltip.style.transform = 'translateX(-50%)';
+        tooltip.classList.add('show');
+        
+        // 3秒后隐藏提示
+        setTimeout(() => {
+          tooltip.classList.remove('show');
+        }, 2000);
+      });
+    });
+    
+    // 荣誉卡片滚动动画
+    function checkHonorCards() {
+      const honorCards = document.querySelectorAll('.honor-card');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // 为每个卡片添加延迟，创建顺序出现的效果
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, index * 150);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      honorCards.forEach(card => {
+        observer.observe(card);
+      });
+    }
+    
+    // 页面滚动时的渐入效果
+    function handleSectionFadeIn() {
+      const sections = document.querySelectorAll('.section-fade-in');
+      sections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (sectionTop < windowHeight * 0.85) {
+          section.classList.add('section-visible');
+        }
+      });
+    }
+    
+    // 页面加载和滚动时触发动画
+    window.addEventListener('load', () => {
+      checkHonorCards();
+      handleSectionFadeIn();
+    });
+    
+    window.addEventListener('scroll', () => {
+      handleSectionFadeIn();
+    });
+  </script>
+</body>
+</html>
+    
